@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zclconf/go-cty/cty"
-
 	"github.com/blackstork-io/fabric/internal/microsoft/client"
 	"github.com/blackstork-io/fabric/plugin"
+	"github.com/blackstork-io/fabric/plugin/dataspec"
 )
 
 type ClientLoadFn func() client.Client
@@ -28,8 +27,8 @@ func Plugin(version string, loader ClientLoadFn) *plugin.Schema {
 	}
 }
 
-func makeClient(ctx context.Context, loader ClientLoadFn, cfg cty.Value) (client.Client, error) {
-	if cfg.IsNull() {
+func makeClient(ctx context.Context, loader ClientLoadFn, cfg *dataspec.Block) (client.Client, error) {
+	if cfg == nil {
 		return nil, fmt.Errorf("configuration is required")
 	}
 	cli := loader()
